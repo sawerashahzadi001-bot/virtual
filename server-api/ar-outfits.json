@@ -1,0 +1,9 @@
+[
+  { "id": "ar1", "name": "Gown", "emoji": "👗", "gradient": "linear-gradient(180deg,#c9a96e,#8a6a3e)" },
+  { "id": "ar2", "name": "Blazer", "emoji": "🧥", "gradient": "linear-gradient(180deg,#3c3c3c,#1a1a1a)" },
+  { "id": "ar3", "name": "Floral", "emoji": "🌸", "gradient": "linear-gradient(180deg,#f5c6d8,#d4729a)" },
+  { "id": "ar4", "name": "Party", "emoji": "✨", "gradient": "linear-gradient(180deg,#f0d060,#b8902a)" },
+  { "id": "ar5", "name": "Casual", "emoji": "👕", "gradient": "linear-gradient(180deg,#5a7ab0,#2a4a7c)" },
+  { "id": "ar6", "name": "Boho", "emoji": "🌿", "gradient": "linear-gradient(180deg,#e8b090,#b07040)" },
+  { "id": "ar9", "name": "Abaya", "emoji": "🧕", "gradient": "linear-gradient(180deg,#6c5a78,#2e2440)" }
+]

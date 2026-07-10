@@ -1,0 +1,9 @@
+node_modules
+dist
+.output
+.lovable
+.vscode
+.git
+.gitignore
+npm-debug.log*
+.DS_Store
