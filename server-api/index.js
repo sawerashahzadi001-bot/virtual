@@ -12,6 +12,7 @@ const mongoUri = process.env.MONGODB_URI;
 const useMongo = Boolean(mongoUri);
 const client = useMongo ? new MongoClient(mongoUri) : null;
 let usersCollection = null;
+let ordersCollection = null;
 
 app.use(cors());
 app.use(express.json());
@@ -19,6 +20,7 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const usersFile = join(__dirname, 'users.json');
+const ordersFile = join(__dirname, 'orders.json');
 
 function readJsonFile(path) {
   if (!fs.existsSync(path)) {
@@ -104,7 +106,9 @@ async function initDatabase() {
   await client.connect();
   const db = client.db();
   usersCollection = db.collection('users');
+  ordersCollection = db.collection('orders');
   await usersCollection.createIndex({ email: 1 }, { unique: true });
+  await ordersCollection.createIndex({ createdAt: -1 });
 }
 
 app.get('/api/products', (req, res) => {
@@ -188,6 +192,91 @@ app.get('/api/auth/users', async (req, res) => {
 
   const users = getUsersFromJson();
   return res.json(users.map(sanitizeUser));
+});
+
+// Orders endpoints
+app.post('/api/orders', async (req, res) => {
+  const { customerName, customerEmail, customerPhone, address, city, postalCode, items, totalPrice } = req.body;
+
+  if (!customerName || !customerEmail || !customerPhone || !address || !city || !items || items.length === 0) {
+    return res.status(400).json({ message: 'Missing required fields.' });
+  }
+
+  const order = {
+    id: `ORD-${Date.now()}`,
+    customerName: String(customerName).trim(),
+    customerEmail: String(customerEmail).trim().toLowerCase(),
+    customerPhone: String(customerPhone).trim(),
+    address: String(address).trim(),
+    city: String(city).trim(),
+    postalCode: String(postalCode).trim(),
+    items: items,
+    totalPrice: parseFloat(totalPrice) || 0,
+    status: 'pending',
+    paymentMethod: 'cash_on_delivery',
+    createdAt: new Date().toISOString(),
+  };
+
+  if (client && ordersCollection) {
+    try {
+      await ordersCollection.insertOne(order);
+    } catch (error) {
+      console.error('Failed to save order to MongoDB:', error);
+      const orders = readJsonFile(ordersFile);
+      orders.push(order);
+      writeJsonFile(ordersFile, orders);
+    }
+  } else {
+    const orders = readJsonFile(ordersFile);
+    orders.push(order);
+    writeJsonFile(ordersFile, orders);
+  }
+
+  return res.status(201).json({
+    message: 'Order created successfully.',
+    order: {
+      id: order.id,
+      status: order.status,
+      totalPrice: order.totalPrice,
+      createdAt: order.createdAt,
+    },
+  });
+});
+
+app.get('/api/orders', async (req, res) => {
+  if (client && ordersCollection) {
+    try {
+      const orders = await ordersCollection.find().sort({ createdAt: -1 }).toArray();
+      return res.json(orders);
+    } catch (error) {
+      console.error('Failed to fetch orders from MongoDB:', error);
+    }
+  }
+
+  const orders = readJsonFile(ordersFile);
+  return res.json(orders);
+});
+
+app.get('/api/orders/:orderId', async (req, res) => {
+  const { orderId } = req.params;
+
+  if (client && ordersCollection) {
+    try {
+      const order = await ordersCollection.findOne({ id: orderId });
+      if (order) return res.json(order);
+    } catch (error) {
+      console.error('Failed to fetch order from MongoDB:', error);
+    }
+  }
+
+  const orders = readJsonFile(ordersFile);
+  const order = orders.find((o) => o.id === orderId);
+
+  if (!order) {
+    return res.status(404).json({ message: 'Order not found.' });
+  }
+
+  return res.json(order);
 });
 
 const distPath = join(__dirname, '..', 'dist');

@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { getDemoProducts, type CartItem, type Product } from "@/lib/luxe/data";
+import { API } from "@/lib/luxe/data";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -13,8 +14,21 @@ export const Route = createFileRoute("/checkout")({
 });
 
 export default function CheckoutPage() {
+  const navigate = useNavigate();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [formData, setFormData] = useState({
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    address: "",
+    city: "",
+    postalCode: "",
+  });
 
   useEffect(() => {
     const stored = window.localStorage.getItem("metadress_cart");
@@ -41,10 +55,42 @@ export default function CheckoutPage() {
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const completeCheckout = () => {
-    window.localStorage.removeItem("luxe_cart");
-    setCart([]);
-    alert("Thank you for shopping with MetaDress! Your order is confirmed.");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${API}/orders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          items: cart,
+          totalPrice: cartTotal,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to create order");
+      }
+
+      const data = await response.json();
+      window.localStorage.removeItem("metadress_cart");
+      setCart([]);
+      alert(`Thank you for your order! Order ID: ${data.order.id}\n\nYour order will be delivered soon via Cash on Delivery.`);
+      navigate({ to: "/" });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -105,14 +151,92 @@ export default function CheckoutPage() {
                 <span>{cart.length}</span>
               </div>
               <div className="summary-row">
-                <span>Estimated total</span>
+                <span>Total</span>
                 <span>${cartTotal.toFixed(2)}</span>
               </div>
-              <p className="summary-note">Shipping and taxes calculated at checkout.</p>
-              <button className="btn-primary full-width" onClick={completeCheckout}>
-                Complete Purchase
+              <p className="summary-note">Payment: Cash on Delivery (Pay at delivery)</p>
+              <button 
+                className="btn-primary full-width" 
+                onClick={() => setShowForm(!showForm)}
+              >
+                {showForm ? "Hide Details" : "Proceed to Checkout"}
               </button>
             </div>
+
+            {showForm && (
+              <div className="summary-card">
+                <h3>Delivery Details</h3>
+                {error && (
+                  <div style={{ color: "red", marginBottom: "10px", fontSize: "14px" }}>
+                    {error}
+                  </div>
+                )}
+                <form onSubmit={handleSubmitOrder} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <input
+                    type="text"
+                    name="customerName"
+                    placeholder="Full Name"
+                    value={formData.customerName}
+                    onChange={handleInputChange}
+                    required
+                    style={{ padding: "8px", border: "1px solid #ddd", borderRadius: "4px" }}
+                  />
+                  <input
+                    type="email"
+                    name="customerEmail"
+                    placeholder="Email"
+                    value={formData.customerEmail}
+                    onChange={handleInputChange}
+                    required
+                    style={{ padding: "8px", border: "1px solid #ddd", borderRadius: "4px" }}
+                  />
+                  <input
+                    type="tel"
+                    name="customerPhone"
+                    placeholder="Phone Number"
+                    value={formData.customerPhone}
+                    onChange={handleInputChange}
+                    required
+                    style={{ padding: "8px", border: "1px solid #ddd", borderRadius: "4px" }}
+                  />
+                  <input
+                    type="text"
+                    name="address"
+                    placeholder="Street Address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    required
+                    style={{ padding: "8px", border: "1px solid #ddd", borderRadius: "4px" }}
+                  />
+                  <input
+                    type="text"
+                    name="city"
+                    placeholder="City"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    required
+                    style={{ padding: "8px", border: "1px solid #ddd", borderRadius: "4px" }}
+                  />
+                  <input
+                    type="text"
+                    name="postalCode"
+                    placeholder="Postal Code (Optional)"
+                    value={formData.postalCode}
+                    onChange={handleInputChange}
+                    style={{ padding: "8px", border: "1px solid #ddd", borderRadius: "4px" }}
+                  />
+                  <button 
+                    type="submit" 
+                    disabled={loading}
+                    className="btn-primary full-width"
+                    style={{ opacity: loading ? 0.6 : 1 }}
+                  >
+                    {loading ? "Processing..." : "Place Order"}
+                  </button>
+                </form>
+              </div>
+            )}
+
             <div className="summary-card">
               <h3>Need help choosing the right fit?</h3>
               <p>Use the AI stylist on the home page for size advice and style suggestions tailored to your look.</p>
