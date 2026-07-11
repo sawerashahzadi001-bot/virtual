@@ -1,11 +1,11 @@
 [
-  { "id": "1", "name": "Noor Beige Abaya", "price": 289, "category": "abayas", "image": "/src/assets/beige abaya.jpeg", "rating": 4.8, "arOutfitId": "ar1" },
-  { "id": "2", "name": "Midnight Black Abaya", "price": 145, "category": "abayas", "image": "/src/assets/black abaya.jpeg", "rating": 4.6, "arOutfitId": "ar9" },
-  { "id": "3", "name": "Emerald Green Abaya", "price": 320, "category": "abayas", "image": "/src/assets/Green abaya.jpeg", "rating": 4.9, "arOutfitId": "ar2" },
-  { "id": "4", "name": "Slate Grey Abaya", "price": 98, "category": "abayas", "image": "/src/assets/grey abaya.jpeg", "rating": 4.5, "arOutfitId": "ar3" },
-  { "id": "5", "name": "Maroon Embroidered Abaya", "price": 175, "category": "abaya", "image": "/src/assets/Mehroon abaya.jpeg", "rating": 4.7, "arOutfitId": "ar4" },
-  { "id": "6", "name": "Mint Garden Abaya", "price": 215, "category": "abayas", "image": "/src/assets/Green abaya.jpeg", "rating": 4.8, "arOutfitId": "ar7" },
-  { "id": "7", "name": "Mocha Luxe Abaya", "price": 130, "category": "abayas", "image": "/src/assets/mocha abaya.jpeg", "rating": 4.4, "arOutfitId": "ar5" },
-  { "id": "8", "name": "Navy Elegance Abaya", "price": 189, "category": "abayas", "image": "/src/assets/zinc abaya.jpeg", "rating": 4.7, "arOutfitId": "ar6" },
-  { "id": "9", "name": "Olive Leaf Abaya", "price": 245, "category": "abayas", "image": "/src/assets/olive.jpeg", "rating": 4.9, "arOutfitId": "ar8" }
+  { "id": "1", "name": "Noor Beige Abaya", "price": 8100, "category": "abayas", "image": "/src/assets/beige abaya.jpeg", "rating": 4.8, "arOutfitId": "ar1" },
+  { "id": "2", "name": "Midnight Black Abaya", "price": 4100, "category": "abayas", "image": "/src/assets/black abaya.jpeg", "rating": 4.6, "arOutfitId": "ar9" },
+  { "id": "3", "name": "Emerald Green Abaya", "price": 9000, "category": "abayas", "image": "/src/assets/Green abaya.jpeg", "rating": 4.9, "arOutfitId": "ar2" },
+  { "id": "4", "name": "Slate Grey Abaya", "price": 2800, "category": "abayas", "image": "/src/assets/grey abaya.jpeg", "rating": 4.5, "arOutfitId": "ar3" },
+  { "id": "5", "name": "Maroon Embroidered Abaya", "price": 4900, "category": "abaya", "image": "/src/assets/Mehroon abaya.jpeg", "rating": 4.7, "arOutfitId": "ar4" },
+  { "id": "6", "name": "Mint Garden Abaya", "price": 6000, "category": "abayas", "image": "/src/assets/Green abaya.jpeg", "rating": 4.8, "arOutfitId": "ar7" },
+  { "id": "7", "name": "Mocha Luxe Abaya", "price": 3700, "category": "abayas", "image": "/src/assets/mocha abaya.jpeg", "rating": 4.4, "arOutfitId": "ar5" },
+  { "id": "8", "name": "Navy Elegance Abaya", "price": 5300, "category": "abayas", "image": "/src/assets/zinc abaya.jpeg", "rating": 4.7, "arOutfitId": "ar6" },
+  { "id": "9", "name": "Olive Leaf Abaya", "price": 6900, "category": "abayas", "image": "/src/assets/olive.jpeg", "rating": 4.9, "arOutfitId": "ar8" }
 ]

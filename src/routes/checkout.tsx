@@ -129,7 +129,7 @@ export default function CheckoutPage() {
                 <img src={item.image} alt={item.name} />
                 <div className="checkout-item-copy">
                   <p className="product-name">{item.name}</p>
-                  <span className="product-price">${item.price.toFixed(2)}</span>
+                  <span className="product-price">Rs. {item.price.toLocaleString()}</span>
                   <div className="cart-item-qty">
                     <button className="qty-btn" onClick={() => updateQty(item.id, -1)}>-</button>
                     <span>{item.quantity}</span>
@@ -152,7 +152,7 @@ export default function CheckoutPage() {
               </div>
               <div className="summary-row">
                 <span>Total</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>Rs. {cartTotal.toLocaleString()}</span>
               </div>
               <p className="summary-note">Payment: Cash on Delivery (Pay at delivery)</p>
               <button 

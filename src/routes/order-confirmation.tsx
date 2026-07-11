@@ -110,7 +110,7 @@ export default function OrderConfirmationPage() {
             <span>{new Date(order.createdAt).toLocaleDateString()}</span>
             <strong>Total Amount:</strong>
             <span style={{ fontSize: "18px", fontWeight: "bold", color: "#0369a1" }}>
-              ${order.totalPrice.toFixed(2)}
+              Rs. {order.totalPrice.toLocaleString()}
             </span>
           </div>
         </div>
@@ -135,12 +135,12 @@ export default function OrderConfirmationPage() {
               <span>
                 {item.name} x{item.quantity}
               </span>
-              <span>${(item.price * item.quantity).toFixed(2)}</span>
+              <span>Rs. {(item.price * item.quantity).toLocaleString()}</span>
             </div>
           ))}
           <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", fontSize: "16px", fontWeight: "bold", borderTop: "2px solid #ddd", marginTop: "12px" }}>
             <span>Total:</span>
-            <span>${order.totalPrice.toFixed(2)}</span>
+            <span>Rs. {order.totalPrice.toLocaleString()}</span>
           </div>
         </div>
 
